@@ -1,0 +1,158 @@
+---
+title: "Aufgabe 03"
+author: "Gruppe 01"
+date: "6 5 2020"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Aufgabe 07 Deskriptive Statistik
+
+```{r}
+#Workspace laden
+load("data/yingtan_20_ueb3.RData")
+Ca <- ljz$Ca_exch
+```
+a) Wenden Sie die Methode summary auf die austauschbaren Ca-Ionen an
+und erläutern Sie kurz die mit dieser Funktion gewonnenen Parameter.
+```{r Aufgabe 07a}
+#summary der austauschbaren Ca-Ionen
+summary(Ca)
+```
+Mit dem Befehl summary() werden die Quantile, der Median, der Mittelwert sowie Minimum und Maximum der Beobachtungswerte der Variable angegen. 
+Der Mittelwert oder auch Durchschnitt der gemessenen Ca-Ionen ist hier 21,926 mu mol/g. Der Median, bei dem die Anzahl der Werte halbiert wird, beträgt 19,491 mu mol/g.
+Für die Quantile wird die Anzahl der Werte in vier gleich große Teile geteilt. Das erste Quantil endet bei 13,633 mu mol/g, das zweite Quantil ist gleich Median, das dritte Quantil endet bei 38,718 mu mol/g und das vierte Quantil ist gleich der größte Beobachtungswert, also 94,311 mu mol/g.
+
+b) Ermitteln Sie wiederum für die austauschbaren Ca-Ionen die Streuungsparameter Varianz und Standardabweichung sowie die zentralen Momente Schiefe und Kurtosis (bezogen auf NV mit kurtosis = 0).
+```{r Aufgabe 07b}
+library(psych)
+var(Ca)
+psych::describe(Ca)
+```
+Die Varianz für die austauschbaren Ca-Ionen ist 123,85 mu mol/g. Die Standardabweichung, also die Wurzel aus der Varianz ist 11,13 mu mol/g. Das bedeutet..
+Der Kurtosis-Wert ist 5,55 (> 0), daher verläuft die Verteilung der austauschbaren Ca-Ionen im Bezug auf die Normalverteilung steilgipflig verläuft.
+Der Wert für die Schiefe ist 0,61 (> 0), was zeigt, dass die Verteilung zudem linkssteil und rechtsschief verläuft.
+
+# Aufgabe 08 Dichte-Histogramme und Box-Whisker-Plots in R
+
+a) Erstellen Sie ein Dichte-Histogramm für die austauschbaren Ca-Ionen. Achten Sie dabei auf aussagekräftige Klassenweiten. Ändern Sie Titel und Achsenbeschriftungen sinnvoll ab und färben Sie die Balken grau ein.
+```{r Aufgabe 08a}
+hist(Ca,
+     nclass = 50,
+     main = "Verteilung der austauschbaren Ca-Ionen",
+     xlab = "austauschbaren Ca-Ionen [mu mol/g",
+     ylab = "Haufigkeit",
+     col = "gray")
+```
+b) Um welche Verteilung handelt es sich bei der Ca-Ionenkonzentration dem visuellen Eindruck nach? Setzen Sie ihre Vermutung in Bezug zu den in Aufgabe 7b. errechneten Formparametern.
+
+Die meisten Werte befinden sich in den ersten beiden Quantilen. Dadurch ist die Verteilung rechtsschief und linkssteil. Das spiegelt sich in dem Formparameter für die Schiefe (0,61 > 0) wieder. Darüber hinaus verläuft die Verteilung steilgipflig. Das bedeutet, dass der Wertebereich, indem 90% der beobachteten Werte liegen kleiner ist, als bei der Normalverteilung und so der Median kleiner als der Mittelwert ist. Außerdem ist der Parameter für die Kutosis > 0.
+
+c) Erstellen Sie nun für die austauschbaren Ca-Ionen einen Box-Whisker-Plot und untersuchen Sie das Randverhalten der Verteilung. Geben Sie mögliche Ausreißer in ihrem Protokoll an (range = 1,5). Vergeben Sie auch hier einen sinnvollen Titel sowie passende Achsenbeschriftungen. Verkleinern Sie die Balkenbreite, um eine ansprechende Grafik zu erzeugen.
+```{r Aufgabe 07c}
+#Erstellen von Boxplots
+boxplot(Ca,
+        xlab = "Häufigkeit der austauschbaren Ca-Ionen",
+        ylab = " austauschbare Ca-Ionen [mol/g]",
+        pars = list(boxwex = 0.4))
+```
+Vor allem im oberen Wertebereich befinden sich Ausreißer. Sie liegen im 1,5-fachen Interquartelsabstand (Boxenlänge) von der Box entfernt. Die Box selbst geht vom ersten bis zum dritten Quantil und die Querstriche zeigen jeweils die Größte und kleinste Beobachtung ohne Ausreißer. \
+Um einen besseren Überblick über die Verteilung der austauschbaren Ca_Ionen zu erhalten, sollten die zwei höchsten Werte (94,31 mol/g und 71,7 mol/g) evtl. aus der Berechnung rausgelassen werden, da dort scheinbar Messfehler vorliegen.
+
+# Aufgabe 09 Plotten in R
+Boxplots mit den Pakten base graphics, lattice und ggplot2 für die austauschbaren Ca-Ionen für drei unterschiedliche Datensätze (regular, catA und catQ)
+
+```{r Aufgabe 09 Datensatz vorbereiten}
+library(dplyr)
+ljzmod <- ljz %>%
+  dplyr::filter(SAMPLING == "regular" | SAMPLING == "catA" | SAMPLING == "catQ") %>%
+  dplyr::select(OBJECTID, SAMPLING, Ca_exch)
+```
+In dem tibble ljzmod sind nun die Samples regular, catA und catQ der austauschbaren Ca-Ionen nach ihrer Object-ID in je einer Spalte sortiert.
+
+- Paket base graphics
+```{r Aufgabe 09 Boxplot base graphics}
+#Variablen der einzelnen Samplings
+regular <- ljzmod$Ca_exch[ljzmod$SAMPLING == "regular"]
+catA <- ljzmod$Ca_exch[ljzmod$SAMPLING == "catA"]
+catQ <- ljzmod$Ca_exch[ljzmod$SAMPLING == "catQ"]
+
+#mit Ausreisser
+boxplot(regular, catA, catQ,
+        names = c("regular", "catA", "catQ"),
+        ylab = "austauschbare Ca-Ionen [mu, mol/g]",
+        main = "Verteilung der austauschbaren Ca-Ionen",
+        col = "gray",
+        width = c(0.4, 0.4, 0.4),
+        pch = "*")
+
+#ohne Ausreisser
+boxplot(regular, catA, catQ,
+        names = c("regular", "catA", "catQ"),
+        ylab = "austauschbare Ca-Ionen [mu, mol/g]",
+        main = "Verteilung der austauschbaren Ca-Ionen\n ohne Ausreißer",
+        col = "gray",
+        width = c(0.4, 0.4, 0.4),
+        pch = "*",
+        outline = FALSE)
+```
+Wenn outline = FALSE ist, werden die Ausreißer nicht berücksichtigt.
+
+- Paket lattice
+```{r Aufgabe 09 Boxplot lattice}
+library(lattice)
+
+#mit Ausreisser
+bwplot(Ca_exch ~ SAMPLING, data = ljzmod,
+       ylab = "austauschbare Ca-Ionen [mol/g]",
+       main = "Verteilung der Austauschbaren Ca-Ionen",
+       box.ratio = 0.5,
+       par.settings = list(box.rectangle = list(col = "black",
+                           fill = "gray"),
+                           box.umbrella = list(col = "black"),
+                           plot.symbol = list(col = "black",
+                                              pch = "*")))
+#ohne Ausreisser
+bwplot(Ca_exch ~ SAMPLING, data = ljzmod,
+       ylab = "austauschbare Ca-Ionen [mol/g]",
+       main = "Verteilung der Austauschbaren Ca-Ionen\n ohne Ausreisser",
+       box.ratio = 0.5,
+       do.out = FALSE,
+       par.settings = list(box.rectangle = list(col = "black",
+                           fill = "gray"),
+                           box.umbrella = list(col = "black")))
+```
+Mit do.out = TRUE/FALSE wird bestimmt, ob Ausreißer angezeigt werden sollen oder nicht.
+
+- Paket ggplot2
+```{r Aufgabe 09 ggplot2}
+library(ggplot2)
+
+#mit Ausreisser
+ggplot(ljzmod, aes(x = SAMPLING,
+                   y = Ca_exch)) +
+  labs(title = "Verteilung der austauschbaren Ca-Ionen",
+       y = "austauschbare Ca-Ionen [mol/g]") +
+  geom_boxplot(fill = '#A4A4A4',
+               color = "black",
+               width = 0.5,
+               outlier.shape = 8) 
+
+#ohne Ausreisser
+ggplot(ljzmod, aes(x = SAMPLING,
+                   y = Ca_exch)) +
+  labs(title = "Verteilung der austauschbaren Ca-Ionen\n ohne Ausreisser",
+       y = "austauschbare Ca-Ionen [mol/g]") +
+  geom_boxplot(fill = '#A4A4A4',
+               color = "black",
+               width = 0.5,
+               outlier.shape = NA) +
+  scale_y_continuous(limits = quantile(ljzmod$Ca_exch,
+                                       c(0.1,0.9)))
+```
+In dem Paket ggplot2 werden, wenn in dem Argument geom_boxplot das Unterargument outlier.shape = NA gesetz ist, die Ausreißer nicht angezeigt. Mit dem Argument scale_y_continuous kann die y-Achse neu angepasst werden.
