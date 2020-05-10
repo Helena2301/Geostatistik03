@@ -5,6 +5,7 @@ date: "6 5 2020"
 output:
   pdf_document: default
   html_document: default
+bibliography: literatur.bib
 ---
 
 ```{r setup, include=FALSE}
@@ -25,7 +26,8 @@ und erläutern Sie kurz die mit dieser Funktion gewonnenen Parameter.
 summary(Ca)
 ```
 Mit dem Befehl summary() werden die Quantile, der Median, der Mittelwert sowie Minimum und Maximum der Beobachtungswerte der Variable angegen. 
-Der Mittelwert oder auch Durchschnitt der gemessenen Ca-Ionen ist hier 21,926 µmol/g. Der Median, bei dem die Anzahl der Werte halbiert wird, beträgt 19,491 µmol/g.
+Das arithmetische Mittel der gemessenen austauschbaren Ca-Ionen ist hier 21,926 µmol/g. Der Median, bei dem die Anzahl der Werte halbiert wird, beträgt 19,491 µmol/g. Das bedeutet, dass mindestens die Hälfte kleiner oder gleich Median und mindestens die Hälfte der Daten größer oder gleich Median ist [@Steland.2016].
+Da das arithmetische Mittel empfindlicher gegenüber Ausreißern ist (ebd.), und es größer als der Median ist, scheint es hier Ausreißer im oberen Wertebereich zu geben.
 Für die Quantile wird die Anzahl der Werte in vier gleich große Teile geteilt. Das erste Quantil endet bei 13,633 µmol/g, das zweite Quantil ist gleich Median, das dritte Quantil endet bei 38,718 µmol/g und das vierte Quantil ist gleich der größte Beobachtungswert, also 94,311 µmol/g.
 
 b) Ermitteln Sie wiederum für die austauschbaren Ca-Ionen die Streuungsparameter Varianz und Standardabweichung sowie die zentralen Momente Schiefe und Kurtosis (bezogen auf NV mit kurtosis = 0).
@@ -34,9 +36,9 @@ library(psych)
 var(Ca)
 psych::describe(Ca)
 ```
-Die Varianz für die austauschbaren Ca-Ionen ist 123,85 µmol/g. Die Standardabweichung, also die Wurzel aus der Varianz ist 11,13 µmol/g. Das bedeutet..
+Varianz und Standardabweichung sind Streuungsparameter [@Steland.2016]. Sie geben die Streuung der Werte zum arithmetischen Mittelwert [@Walser.2011] oder auch die Variabilität der Werte [@Hedderich.2018] an. Die Varianz für die austauschbaren Ca-Ionen ist 123,85 µmol/g. Die Standardabweichung, also die Wurzel aus der Varianz ist 11,13 µmol/g. Das bedeutet..
 Der Kurtosis-Wert ist 5,55 (> 0), daher verläuft die Verteilung der austauschbaren Ca-Ionen im Bezug auf die Normalverteilung steilgipflig verläuft.
-Der Wert für die Schiefe ist 0,61 (> 0), was zeigt, dass die Verteilung zudem linkssteil und rechtsschief verläuft.
+Der Wert für die Schiefe ist 0,61 (> 0), was zeigt, dass die Verteilung zudem linkssteil und rechtsschief verläuft [@Steland.2016].
 
 # Aufgabe 08 Dichte-Histogramme und Box-Whisker-Plots in R
 
@@ -51,18 +53,17 @@ hist(Ca,
 ```
 b) Um welche Verteilung handelt es sich bei der Ca-Ionenkonzentration dem visuellen Eindruck nach? Setzen Sie ihre Vermutung in Bezug zu den in Aufgabe 7b. errechneten Formparametern.
 
-Die meisten Werte befinden sich in den ersten beiden Quantilen. Dadurch ist die Verteilung rechtsschief und linkssteil. Das spiegelt sich in dem Formparameter für die Schiefe (0,61 > 0) wieder. Darüber hinaus verläuft die Verteilung steilgipflig. Das bedeutet, dass der Wertebereich, indem 90% der beobachteten Werte liegen kleiner ist, als bei der Normalverteilung und so der Median kleiner als der Mittelwert ist. Außerdem ist der Parameter für die Kutosis > 0.
+Die meisten Werte befinden sich in den ersten beiden Quantilen. Dadurch ist die Verteilung rechtsschief und linkssteil. Das spiegelt sich in dem Formparameter für die Schiefe (0,61 > 0) wieder. Darüber hinaus verläuft die Verteilung steilgipflig. Das bedeutet, dass der Wertebereich, indem 90% der beobachteten Werte liegen kleiner ist, als bei der Normalverteilung und so der Median kleiner als der Mittelwert ist. Außerdem ist der Parameter für die Kutosis > 0 [@Steland.2016].
 
 c) Erstellen Sie nun für die austauschbaren Ca-Ionen einen Box-Whisker-Plot und untersuchen Sie das Randverhalten der Verteilung. Geben Sie mögliche Ausreißer in ihrem Protokoll an (range = 1,5). Vergeben Sie auch hier einen sinnvollen Titel sowie passende Achsenbeschriftungen. Verkleinern Sie die Balkenbreite, um eine ansprechende Grafik zu erzeugen.
 ```{r Aufgabe 07c}
 #Erstellen von Boxplots
 boxplot(Ca,
-        xlab = "Häufigkeit der austauschbaren Ca-Ionen",
         ylab = " austauschbare Ca-Ionen [µmol/g]",
         pars = list(boxwex = 0.4))
 ```
-Vor allem im oberen Wertebereich befinden sich Ausreißer. Sie liegen im 1,5-fachen Interquartelsabstand (Boxenlänge) von der Box entfernt. Die Box selbst geht vom ersten bis zum dritten Quantil und die Querstriche zeigen jeweils die Größte und kleinste Beobachtung ohne Ausreißer. \
-Um einen besseren Überblick über die Verteilung der austauschbaren Ca_Ionen zu erhalten, sollten die zwei höchsten Werte (94,31 µmol/g und 71,7 µmol/g) evtl. aus der Berechnung rausgelassen werden, da dort scheinbar Messfehler vorliegen.
+Vor allem im oberen Wertebereich befinden sich Ausreißer. Sie liegen im 1,5-fachen Interquartelsabstand (Boxenlänge) von der Box entfernt. Die Box selbst geht vom ersten bis zum dritten Quantil und enthält die zentralen 50% der Werte [@Steland.2016]. Die Querstriche zeigen jeweils die Größte und kleinste Beobachtung ohne Ausreißer. \
+Um einen besseren Überblick über die Verteilung der austauschbaren Ca_Ionen zu erhalten, sollten die zwei höchsten Werte (94,31 µmol/g und 71,7 µmol/g) evtl. aus der Berechnung rausgelassen werden, da dort scheinbar Messfehler vorliegen [@Walser.2011].
 
 # Aufgabe 09 Plotten in R
 Boxplots mit den Pakten base graphics, lattice und ggplot2 für die austauschbaren Ca-Ionen für drei unterschiedliche Datensätze (regular, catA und catQ)
@@ -156,3 +157,5 @@ ggplot(ljzmod, aes(x = SAMPLING,
                                        c(0.1,0.9)))
 ```
 In dem Paket ggplot2 werden, wenn in dem Argument geom_boxplot das Unterargument outlier.shape = NA gesetz ist, die Ausreißer nicht angezeigt. Mit dem Argument scale_y_continuous kann die y-Achse neu angepasst werden.
+
+## Literatur
