@@ -83,9 +83,11 @@ Der selbst berechnete Wert für die Schiefe hingegen ist gleich dem Skewness-Wer
 # Aufgabe 08 Dichte-Histogramme und Box-Whisker-Plots in R
 
 a) Erstellen Sie ein Dichte-Histogramm für die austauschbaren Ca-Ionen. Achten Sie dabei auf aussagekräftige Klassenweiten. Ändern Sie Titel und Achsenbeschriftungen sinnvoll ab und färben Sie die Balken grau ein.
+
+Berechnung der Klassenweite s. @Hedderich.2018
 ```{r Aufgabe 08a}
 hist(Ca,
-     nclass = 50,
+     breaks="FD", #Bin-Weite nach Freedman-Diaconis
      main = "Verteilung der austauschbaren Ca-Ionen",
      xlab = "austauschbaren Ca-Ionen [µmol/g]",
      ylab = "Haufigkeit",
