@@ -156,7 +156,8 @@ bwplot(Ca_exch ~ SAMPLING, data = ljzmod,
                            box.dot = list(pch = "|"),
                            box.umbrella = list(col = "black"),
                            plot.symbol = list(col = "black",
-                                              pch = "*")))
+                                              pch = "*",
+                                              cex = 2)))
 ```
 - Paket ggplot2
 ```{r Aufgabe 09 ggplot2}
