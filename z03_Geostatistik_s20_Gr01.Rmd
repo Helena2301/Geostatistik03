@@ -25,7 +25,7 @@ und erläutern Sie kurz die mit dieser Funktion gewonnenen Parameter.
 #summary der austauschbaren Ca-Ionen
 summary(Ca)
 ```
-Mit dem Befehl summary() werden die Quantile, der Median, der Mittelwert sowie Minimum und Maximum der Beobachtungswerte der Variable angegen. 
+Mit dem Befehl summary() werden die Quantile, der Median, das arithmetische Mittel sowie Minimum und Maximum der Beobachtungswerte der Variable angegen. 
 Das arithmetische Mittel der gemessenen austauschbaren Ca-Ionen ist hier 21,926 µmol/g. Der Median, bei dem die Anzahl der Werte halbiert wird, beträgt 19,491 µmol/g. Das bedeutet, dass mindestens die Hälfte kleiner oder gleich Median und mindestens die Hälfte der Daten größer oder gleich Median ist [@Steland.2016].
 Da das arithmetische Mittel empfindlicher gegenüber Ausreißern ist (ebd.), und es größer als der Median ist, scheint es hier Ausreißer im oberen Wertebereich zu geben.
 Für die Quantile wird die Anzahl der Werte in vier gleich große Teile geteilt. Das erste Quantil endet bei 13,633 µmol/g, das zweite Quantil ist gleich Median, das dritte Quantil endet bei 38,718 µmol/g und das vierte Quantil ist gleich der größte Beobachtungswert, also 94,311 µmol/g.
@@ -42,7 +42,7 @@ library(moments)
 skewness(Ca)
 kurtosis(Ca)
 ```
-Varianz und Standardabweichung sind Streuungsparameter [@Steland.2016]. Sie geben die Streuung der Werte zum arithmetischen Mittelwert [@Walser.2011] oder auch die Variabilität der Werte [@Hedderich.2018] an. Die Varianz für die austauschbaren Ca-Ionen ist 123,85 µmol/g. Die Standardabweichung, also die Wurzel aus der Varianz ist 11,13 µmol/g. Das bedeutet..
+Varianz und Standardabweichung sind Streuungsparameter [@Steland.2016]. Sie geben die Streuung der Werte zum arithmetischen Mittelwert [@Walser.2011] oder auch die Variabilität der Werte [@Hedderich.2018] an. Die Varianz für die austauschbaren Ca-Ionen ist 123,85 µmol/g. Die Standardabweichung, also die Wurzel aus der Varianz ist 11,13 µmol/g.
 Der Kurtosis-Wert ist 8,6 (5,55) (> 0), daher verläuft die Verteilung der austauschbaren Ca-Ionen im Bezug auf die Normalverteilung steilgipflig verläuft.
 Der Wert für die Schiefe ist 1,5 (> 0), was zeigt, dass die Verteilung zudem linkssteil und rechtsschief verläuft [@Steland.2016].
 
@@ -111,8 +111,7 @@ boxplot.stats(ljz$Ca_exch)
 x <- boxplot.stats(ljz$Ca_exch)$out
 dplyr::filter(ljz, ljz$Ca_exch >= min(x))
 ```
-Vor allem im oberen Wertebereich befinden sich Ausreißer. Sie liegen im 1,5-fachen Interquartelsabstand (Boxenlänge) von der Box entfernt. Die Box selbst geht vom ersten bis zum dritten Quantil und enthält die zentralen 50% der Werte [@Steland.2016]. Die Querstriche zeigen jeweils die Größte und kleinste Beobachtung ohne Ausreißer. \
-Um einen besseren Überblick über die Verteilung der austauschbaren Ca_Ionen zu erhalten, sollten die zwei höchsten Werte (94,31 µmol/g und 71,7 µmol/g) evtl. aus der Berechnung rausgelassen werden, da dort scheinbar Messfehler vorliegen [@Walser.2011].
+Vor allem im oberen Wertebereich befinden sich Ausreißer. Sie liegen im 1,5-fachen Interquartilsabstand (Boxenlänge) von der Box entfernt. Die Box selbst geht vom ersten bis zum dritten Quartil und enthält die zentralen 50% der Werte [@Steland.2016]. Die Querstriche zeigen jeweils die Größte und kleinste Beobachtung ohne Ausreißer.
 
 # Aufgabe 09 Plotten in R
 Boxplots mit den Pakten base graphics, lattice und ggplot2 für die austauschbaren Ca-Ionen für drei unterschiedliche Datensätze (regular, catA und catQ)
