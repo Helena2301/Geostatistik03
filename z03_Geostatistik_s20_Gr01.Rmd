@@ -93,14 +93,21 @@ hist(Ca,
 ```
 b) Um welche Verteilung handelt es sich bei der Ca-Ionenkonzentration dem visuellen Eindruck nach? Setzen Sie ihre Vermutung in Bezug zu den in Aufgabe 7b. errechneten Formparametern.
 
-Die meisten Werte befinden sich in den ersten beiden Quantilen. Dadurch ist die Verteilung rechtsschief und linkssteil. Das spiegelt sich in dem Formparameter für die Schiefe (0,61 > 0) wieder. Darüber hinaus verläuft die Verteilung steilgipflig. Das bedeutet, dass der Wertebereich, indem 90% der beobachteten Werte liegen kleiner ist, als bei der Normalverteilung und so der Median kleiner als der Mittelwert ist. Außerdem ist der Parameter für die Kutosis > 0 [@Steland.2016].
+Die meisten Werte befinden sich in den ersten beiden Quantilen. Dadurch ist die Verteilung rechtsschief und linkssteil. Das spiegelt sich in dem Formparameter für die Schiefe (0,61 (1,5) > 0) wieder. Darüber hinaus verläuft die Verteilung steilgipflig. Das bedeutet, dass der Wertebereich, indem 90% der beobachteten Werte liegen kleiner ist, als bei der Normalverteilung und so der Median kleiner als der Mittelwert ist. Außerdem ist der Parameter für die Kutosis > 0 [@Steland.2016].
 
 c) Erstellen Sie nun für die austauschbaren Ca-Ionen einen Box-Whisker-Plot und untersuchen Sie das Randverhalten der Verteilung. Geben Sie mögliche Ausreißer in ihrem Protokoll an (range = 1,5). Vergeben Sie auch hier einen sinnvollen Titel sowie passende Achsenbeschriftungen. Verkleinern Sie die Balkenbreite, um eine ansprechende Grafik zu erzeugen.
 ```{r Aufgabe 07c}
 #Erstellen von Boxplots
 boxplot(Ca,
+        main = "Verteilung der austauschbaren Ca-Ionen",
         ylab = " austauschbare Ca-Ionen [µmol/g]",
-        pars = list(boxwex = 0.4))
+        boxwex = 0.4,
+        col = "grey")
+
+#Ausreisser aussortieren
+boxplot.stats(ljz$Ca_exch)
+x <- boxplot.stats(ljz$Ca_exch)$out
+dplyr::filter(ljz, ljz$Ca_exch >= min(x))
 ```
 Vor allem im oberen Wertebereich befinden sich Ausreißer. Sie liegen im 1,5-fachen Interquartelsabstand (Boxenlänge) von der Box entfernt. Die Box selbst geht vom ersten bis zum dritten Quantil und enthält die zentralen 50% der Werte [@Steland.2016]. Die Querstriche zeigen jeweils die Größte und kleinste Beobachtung ohne Ausreißer. \
 Um einen besseren Überblick über die Verteilung der austauschbaren Ca_Ionen zu erhalten, sollten die zwei höchsten Werte (94,31 µmol/g und 71,7 µmol/g) evtl. aus der Berechnung rausgelassen werden, da dort scheinbar Messfehler vorliegen [@Walser.2011].
@@ -131,18 +138,7 @@ boxplot(regular, catA, catQ,
         col = "gray",
         width = c(0.4, 0.4, 0.4),
         pch = "*")
-
-#ohne Ausreisser
-boxplot(regular, catA, catQ,
-        names = c("regular", "catA", "catQ"),
-        ylab = "austauschbare Ca-Ionen [µmol/g]",
-        main = "Verteilung der austauschbaren Ca-Ionen\n ohne Ausreißer",
-        col = "gray",
-        width = c(0.4, 0.4, 0.4),
-        pch = "*",
-        outline = FALSE)
 ```
-Wenn outline = FALSE ist, werden die Ausreißer nicht berücksichtigt.
 
 - Paket lattice
 ```{r Aufgabe 09 Boxplot lattice}
@@ -155,21 +151,11 @@ bwplot(Ca_exch ~ SAMPLING, data = ljzmod,
        box.ratio = 0.5,
        par.settings = list(box.rectangle = list(col = "black",
                            fill = "gray"),
+                           box.dot = list(pch = "|"),
                            box.umbrella = list(col = "black"),
                            plot.symbol = list(col = "black",
                                               pch = "*")))
-#ohne Ausreisser
-bwplot(Ca_exch ~ SAMPLING, data = ljzmod,
-       ylab = "austauschbare Ca-Ionen [µmol/g]",
-       main = "Verteilung der Austauschbaren Ca-Ionen\n ohne Ausreisser",
-       box.ratio = 0.5,
-       do.out = FALSE,
-       par.settings = list(box.rectangle = list(col = "black",
-                           fill = "gray"),
-                           box.umbrella = list(col = "black")))
 ```
-Mit do.out = TRUE/FALSE wird bestimmt, ob Ausreißer angezeigt werden sollen oder nicht.
-
 - Paket ggplot2
 ```{r Aufgabe 09 ggplot2}
 library(ggplot2)
@@ -182,20 +168,9 @@ ggplot(ljzmod, aes(x = SAMPLING,
   geom_boxplot(fill = '#A4A4A4',
                color = "black",
                width = 0.5,
-               outlier.shape = 8) 
-
-#ohne Ausreisser
-ggplot(ljzmod, aes(x = SAMPLING,
-                   y = Ca_exch)) +
-  labs(title = "Verteilung der austauschbaren Ca-Ionen\n ohne Ausreisser",
-       y = "austauschbare Ca-Ionen [µmol/g]") +
-  geom_boxplot(fill = '#A4A4A4',
-               color = "black",
-               width = 0.5,
-               outlier.shape = NA) +
-  scale_y_continuous(limits = quantile(ljzmod$Ca_exch,
-                                       c(0.1,0.9)))
+               outlier.shape = 8,
+               orientation = TRUE) 
 ```
-In dem Paket ggplot2 werden, wenn in dem Argument geom_boxplot das Unterargument outlier.shape = NA gesetz ist, die Ausreißer nicht angezeigt. Mit dem Argument scale_y_continuous kann die y-Achse neu angepasst werden.
+Die Länge des Whiskers wird im base graphics Paket und im Paket lattice mit range beschrieben. Bei ggplot2 heißt das Argument coe. In allen Paketen ist die Default-Einstellung 1,5. Das Bedeutet, dass Werte, die den 1,5-fachen Interquartelsabstand (Boxenlänge) von der Box entfernt liegen, als Ausreißer gelten [@Steland.2016].
 
 ## Literatur
