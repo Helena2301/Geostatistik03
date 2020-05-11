@@ -32,13 +32,53 @@ Für die Quantile wird die Anzahl der Werte in vier gleich große Teile geteilt.
 
 b) Ermitteln Sie wiederum für die austauschbaren Ca-Ionen die Streuungsparameter Varianz und Standardabweichung sowie die zentralen Momente Schiefe und Kurtosis (bezogen auf NV mit kurtosis = 0).
 ```{r Aufgabe 07b}
-library(psych)
 var(Ca)
-psych::describe(Ca)
+sd(Ca)
+
+library(psych)
+describe(Ca)
+
+library(moments)
+skewness(Ca)
+kurtosis(Ca)
 ```
 Varianz und Standardabweichung sind Streuungsparameter [@Steland.2016]. Sie geben die Streuung der Werte zum arithmetischen Mittelwert [@Walser.2011] oder auch die Variabilität der Werte [@Hedderich.2018] an. Die Varianz für die austauschbaren Ca-Ionen ist 123,85 µmol/g. Die Standardabweichung, also die Wurzel aus der Varianz ist 11,13 µmol/g. Das bedeutet..
-Der Kurtosis-Wert ist 5,55 (> 0), daher verläuft die Verteilung der austauschbaren Ca-Ionen im Bezug auf die Normalverteilung steilgipflig verläuft.
-Der Wert für die Schiefe ist 0,61 (> 0), was zeigt, dass die Verteilung zudem linkssteil und rechtsschief verläuft [@Steland.2016].
+Der Kurtosis-Wert ist 8,6 (5,55) (> 0), daher verläuft die Verteilung der austauschbaren Ca-Ionen im Bezug auf die Normalverteilung steilgipflig verläuft.
+Der Wert für die Schiefe ist 1,5 (> 0), was zeigt, dass die Verteilung zudem linkssteil und rechtsschief verläuft [@Steland.2016].
+
+Alternative Lösung mittels selbsterstellter Funktionen:
+```{r Aufgabe 07 Alternative var, stabw}
+#Varianz
+varf <- function(x) {
+  mean((x - mean(x))^2)
+}
+
+varf(Ca)
+
+#Standardabweichung
+stabw <- function(x) {
+  sqrt(mean((x-mean(x))^2))
+}
+
+stabw(Ca)
+```
+Die Differenz zwischen den Ergebnissen für die Varianz der Funktion von RStudio und der selbsterstellten Funktion ist 0,37. Das liegt daran, dass RStudio eine erwartete Fehlerkorrektur vornimmt und durch (n-1) und nicht nur durch n teilt, wobei n die Anzahl der Messwerte darstellt [@Steland.2016]. Folglich weicht auch die eigens berechnete Standardabweichung leicht von der automatisch berechneten ab.
+```{r Aufgabe 09 Alternative Schiefe und Kurtosis}
+#Schiefe
+schiefe <- function(x) {
+  1/(length(x) * (sqrt(var(x))^3)) * sum((x-mean(x))^3)
+}
+
+schiefe(Ca)
+
+kurtosisf <- function(x) {
+  1/(length(x) * (sqrt(var(x))^4)) * sum((x-mean(x))^4)-3
+}
+
+kurtosisf(Ca)
+```
+Auch für die Schiefe und die Kurtosis gibt es unterschiedliche berechnungsmöglichkeiten. Der selbst berechnete Kurtosiswert ist gleich dem Kurtosiswert aus dem Package psych, aber z.B. niedriger als der aus dem Package psych. \
+Der selbst berechnete Wert für die Schiefe hingegen ist gleich dem Skewness-Wert aus dem Package moments und dem aus dem Package psych.
 
 # Aufgabe 08 Dichte-Histogramme und Box-Whisker-Plots in R
 
